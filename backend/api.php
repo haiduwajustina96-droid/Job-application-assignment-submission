@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *'); // Allow CORS for frontend
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -27,9 +27,8 @@ if (count($ages) !== $occupants) {
     exit;
 }
 
-// Map Unit Name to Unit Type ID (for testing)
 $unitMap = [
-    'Namib Desert Lodge' => -2147483637,
+    'Kalahari Farmhouse' => -2147483637,
     'Etosha Safari Lodge' => -2147483456
 ];
 if (!isset($unitMap[$unitName])) {
@@ -38,7 +37,6 @@ if (!isset($unitMap[$unitName])) {
 }
 $unitTypeId = $unitMap[$unitName];
 
-// Convert dates: dd/mm/yyyy to yyyy-mm-dd
 try {
     $arrivalDate = DateTime::createFromFormat('d/m/Y', $arrival)->format('Y-m-d');
     $departureDate = DateTime::createFromFormat('d/m/Y', $departure)->format('Y-m-d');
@@ -47,14 +45,12 @@ try {
     exit;
 }
 
-// Build Guests array
 $guests = [];
 foreach ($ages as $age) {
     $ageGroup = ($age >= 14) ? 'Adult' : 'Child';
     $guests[] = ['Age Group' => $ageGroup];
 }
 
-// Mutated payload
 $payload = [
     'Unit Type ID' => $unitTypeId,
     'Arrival' => $arrivalDate,
@@ -62,7 +58,6 @@ $payload = [
     'Guests' => $guests
 ];
 
-// POST to remote API
 $ch = curl_init('https://dev.gondwana-collection.com/Web-Store/Rates/Rates.php');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
@@ -77,7 +72,6 @@ if ($httpCode !== 200) {
     exit;
 }
 
-// Relay response (add unit name and date range for frontend display)
 $remoteData = json_decode($response, true);
 $remoteData['Unit Name'] = $unitName;
 $remoteData['Date Range'] = $arrival . ' to ' . $departure;
