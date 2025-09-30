@@ -1,0 +1,12 @@
+{
+  "name": "PHP Codespace",
+  "image": "mcr.microsoft.com/vscode/devcontainers/php:8.1",
+  "remoteUser": "vscode",
+  "postCreateCommand": "mkdir -p /workspace && echo 'Devcontainer ready'",
+  "forwardPorts": [8080],
+  "customizations": {
+    "vscode": {
+      "extensions": ["bmewburn.vscode-intelephense-client", "esbenp.prettier-vscode"]
+    }
+  }
+}
